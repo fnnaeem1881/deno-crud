@@ -7,7 +7,7 @@ import {
 } from "https://deno.land/x/oak/mod.ts";
 
 const app = new Application();
-import router from "./srs/routes/defualt.ts";
+import router from "./src/routes/defualt.ts";
 
 
 app.use(async (ctx, next) => {
