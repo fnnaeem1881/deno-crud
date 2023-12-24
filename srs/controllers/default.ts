@@ -1,6 +1,6 @@
 import { Application, Context, Status } from "https://deno.land/x/oak/mod.ts";
 import database from "./../config/database.ts";
-import { create, fetchAll, findByID,update, Item } from "./../models/items.ts";
+import { create, fetchAll, findByID,update,deleteByID, Item } from "./../models/items.ts";
 
 export const getItems = async (ctx: Context) => {
   const data = await fetchAll();
@@ -60,15 +60,16 @@ export const ItemsUpdate = async (ctx: Context) => {
   }
 };
 
-export const ItemsDelete = (ctx: Context) => {
+export const ItemsDelete = async (ctx: Context) => {
   const { id } = ctx.params;
-  const index = data.findIndex((i) => i.id === id);
+  const data = await deleteByID(id);
+  console.log(`Deleted ${data} rows`);
 
-  if (index !== -1) {
-    const deletedItem = data.splice(index, 1)[0];
-    ctx.response.body = deletedItem;
+  if (data > 0) {
+      ctx.response.body = { message: "Deleted item!" };
   } else {
-    ctx.response.status = Status.NotFound;
-    ctx.response.body = { message: "Item not found" };
+      ctx.response.status = Status.NotFound;
+      ctx.response.body = { message: "Item not found" };
   }
 };
+

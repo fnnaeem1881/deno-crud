@@ -29,18 +29,21 @@ export const findByID = async (id: any): Promise<number> => {
   return result;
 };
 export const update = async (item: Item): Promise<number> => {
-    
-    const getData = await database.query("select * from items where id = ?", [
-        item.id,
-    ]);
-    console.log('asdas',getData);
+  const getData = await database.query("select * from items where id = ?", [
+    item.id,
+  ]);
   if (getData != null) {
-    const UpdateData =await database.query(
-      `update items set name = '${item.name}', description = ${item.description} where id = ${item.id}`,
+    const updateData = await database.query(
+      "UPDATE items SET name = ?, description = ? WHERE id = ?",
+      [item.name, item.description, item.id],
     );
-    return UpdateData;
+    return updateData;
   } else {
     return 0;
   }
 };
 
+export const deleteByID = async (id: any): Promise<number> => {
+    const result = await database.query("DELETE FROM ?? WHERE id = ?", ["items", id]);
+    return result.affectedRows || 0;
+};
