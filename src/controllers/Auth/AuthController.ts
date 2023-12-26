@@ -67,6 +67,12 @@ export const Registration = async (ctx: Context) => {
     const requestBody = await data.value;
     const salt = await bcrypt.genSalt(8);
     const hashedPassword = await bcrypt.hash(requestBody.password, salt);
+    const existingUser = await findByMobile("users", requestBody.mobile);
+    if (existingUser) {
+      ctx.response.status = 409;
+      ctx.response.body = { message: "Mobile already exists" };
+      return;
+    }
     const newItem: User = {
       name: requestBody.name,
       email: requestBody.email,
