@@ -1,46 +1,78 @@
-import { verify } from "https://deno.land/x/djwt@v2.4/mod.ts";
-import { key } from "../helper/jwt.ts";
-import { Context } from "https://deno.land/x/oak/mod.ts";
+import database from "./../../config/database.ts";
+import {
+  Application,
+  Context,
+  RouterContext,
+  Status,
+} from "https://deno.land/x/oak/mod.ts";
+import { verifyJwt } from "../helper/jwt.ts";
+import {
+  deleteByID,
+  fetchAll,
+  findByEmail,
+  findByID,
+  findByMobile,
+  StoreData,
+  updateData,
+} from "./../../helper/db_query.ts";
 
-export const authorized = async (ctx: Context, next: any) => {
+export const authorized = async (ctx: Context, next: () => Promise<unknown>) => {
   try {
     const headers: Headers = ctx.request.headers;
     const authorization = headers.get("Authorization");
+    const cookieToken = await ctx.cookies.get("access_token");
+    let access_token;
 
-    if (!authorization) {
+    if (authorization) {
+      access_token = authorization.split(" ")[1];
+    } else if (cookieToken) {
+      access_token = cookieToken;
+    }
+
+    if (!access_token) {
       ctx.response.status = 401;
       ctx.response.body = {
-        message: "Authorization header is missing",
+        status: "fail",
+        message: "You are not logged in",
       };
       return;
     }
-    
-    const jwt = authorization.split(" ")[1];
 
-    if (!jwt) {
+    const decoded = await verifyJwt<{ sub: string }>({
+      token: access_token,
+      publicKeyPem: "ACCESS_TOKEN_PUBLIC_KEY",
+    });
+
+    const message = "Token is invalid or session has expired";
+
+    if (!decoded) {
       ctx.response.status = 401;
       ctx.response.body = {
-        message: "JWT token is missing",
+        status: "fail",
+        message,
+      };
+      return;
+    }
+    const user = await findByID("users", decoded.sub);
+
+    if (!user) {
+      ctx.response.status = 401;
+      ctx.response.body = {
+        status: "fail",
+        message,
       };
       return;
     }
 
-    console.log(jwt);
-    const payload = await verify(jwt, key);
-    console.log('asd');
-    
-    if (!payload) {
-      throw new Error("!payload");
-    }
-
-    ctx.state.user = payload;
-
+    ctx.state["user_id"] = user.id;
     await next();
+    delete ctx.state.user_id;
   } catch (error) {
-    ctx.response.status = 401;
+    ctx.response.status = 500;
     ctx.response.body = {
-      message: "You are not authorized to access this route",
+      status: "fail",
+      message: error.message,
     };
-    return;
   }
 };
+
