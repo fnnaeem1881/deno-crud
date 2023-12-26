@@ -1,22 +1,95 @@
 <!DOCTYPE html>
+<html lang="en">
+
 <head>
-  <title>Pusher Test</title>
-  <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-  <script>
-    Pusher.logToConsole = true;
-    var pusher = new Pusher('1ee622cf7ae9168aca28', {
-      cluster: 'ap2'
-    });
-    var channel = pusher.subscribe('test-channel');
-    channel.bind('test-event', function(data) {
-      alert(JSON.stringify(data));
-    });
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Data Table</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+        Pusher.logToConsole = true;
+        var pusher = new Pusher('1ee622cf7ae9168aca28', {
+            cluster: 'ap2'
+        });
+        var channel = pusher.subscribe('test-channel');
+        channel.bind('test-event', function () {
+            fetchDataFromApi();
+        });
+        fetchDataFromApi();
+
+        function fetchDataFromApi() {
+            const token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ3ZWJzaXRlLmNvbSIsImlhdCI6MTcwMzU4NjkxMiwiZXhwIjoxNzAzNTg3ODEyLCJzdWIiOjF9.Ml5_1BjLXJ45_Mqwj8pgwGqERz8M9HQk3WEpX6TKnozNFN5OpdiM4qgBjKx2z5T-dvZ6H8qn4cyd-GP8op4W_PVc5OZtvC7ZUFAPFYx9pV6HJb3R-xRgncvB9bm5YKjE4TXEI11N4Ksa-hdb55nqN3cGlzhfSOK_8CkI4X7VHIXThRghM5yL7cbNBTnW2QS-ae0-2_rMHqlIk13fuWhIx8b3ifjiO7NaNHvx2euA8fjhggLID3rrKs2wr3mwsIjHlK8G1F_6zfB_HF7gtnPqwq_JSqfcinN1P3faV6CF-zCvgA2qUQqlscnimK7Xg3SbmEM0yXgndD3_6y7SfAfsyWZ_SqfjcUujBt8yvcu6gZU44MndkCeWGS0MxMpTIDzCt9A27gaOYNfs0B3Kjyg5jkdqVUUU_D7xuyq87Ly2tm7Lxuz7W8cfXtYM8sS9hBg-xOYCx4zM7YN5LRj3CVnrVAg7MNrYigCm1Tc7_oVEY8b5W0iO80zc_IaXD2ySAvV0B7YlEXNajPbMbMGIJAfBlnZubAcv50zYu7fZYW8S8Or8stk3MtliJ1lnw-Yxisi30t3ml1tb4F92gSPjacbltNU5eB2iNCx-DjVmaeFSpYiEH_103KQLjQxCBkaBsv-o813xZ3Ul1CNAzqkynkchqBH1ztj-jqFmWO4Msc87PJE';
+
+            fetch('http://127.0.0.1:8000/items', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    clearTable();
+                    data.forEach(item => appendDataToTable(item));
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+
+        function clearTable() {
+            var table = document.getElementById('dataTable');
+            var tbody = table.querySelector('tbody');
+            var thead = table.querySelector('thead');
+            console.log(tbody);
+            console.log(tbody.rows.length);
+
+            // Remove all existing rows
+            while (tbody.rows.length > 0) {
+                tbody.deleteRow(tbody.rows.length - 1);
+            }// Remove all existing rows
+            while (thead.rows.length > 0) {
+                thead.deleteRow(thead.rows.length - 1);
+            }
+        }
+
+        function appendDataToTable(data) {
+            var table = document.getElementById('dataTable');
+            var newRow = table.insertRow(table.rows.length);
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+            var cell4 = newRow.insertCell(3);
+            cell1.innerHTML = data.id;
+            cell2.innerHTML = data.name;
+            cell3.innerHTML = data.description;
+            cell4.innerHTML = new Date(data.created_at).toLocaleString(); // Format the date
+        }
+    </script>
 </head>
+
 <body>
-  <h1>Pusher Test</h1>
-  <p>
-    Try publishing an event to channel <code>my-channel</code>
-    with event name <code>my-event</code>.
-  </p>
+    <div class="container mt-5">
+        <h1>API Data Table</h1>
+
+        <!-- Table to display API data -->
+        <table class="table" id="dataTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js (required for Bootstrap) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
+</html>

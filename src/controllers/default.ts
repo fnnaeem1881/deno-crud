@@ -6,10 +6,8 @@ import { pusher } from "../helper/pusher.ts";
 export const getItems = async (ctx: Context) => {
   const data = await fetchAll('items');
 
-  pusher.trigger("test-channel", "test-event", {
-    message: "This is My Pusher"
-  });
   
+    
   ctx.response.body = data;
   ctx.response.status = 200;
 };
@@ -34,7 +32,15 @@ export const getItemsStore = async (ctx) => {
       description: requestBody.description,
     };
     const store = await StoreData('items',newItem);
-
+    const channel = 'test-channel';
+    const event = 'test-event';
+    const Pusherdata = {
+      message: 'This is My Pusher',
+    };
+    pusher.trigger(channel, event, Pusherdata)
+      .then(() => console.log('Event triggered successfully'))
+      .catch((error) => console.error('Error triggering event:', error));
+  
     console.log(`Inserted ${store} rows`);
 
     ctx.response.body = { message: "Created Item!", Item: newItem };

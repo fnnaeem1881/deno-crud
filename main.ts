@@ -2,6 +2,7 @@ import { Application, Router, Context } from "https://deno.land/x/oak/mod.ts";
 import { serve } from "https://deno.land/std@0.150.0/http/server.ts";
 import { Server } from "https://deno.land/x/socket_io@0.1.1/mod.ts";
 import * as logger from "https://deno.land/x/oak_logger@1.0.0/mod.ts";
+import { oakCors } from "https://deno.land/x/cors/mod.ts";
 
 const io = new Server();
 
@@ -32,6 +33,7 @@ app.use(async (ctx, next) => {
 // Middleware Logger
 app.use(logger.default.logger);
 app.use(logger.default.responseTime);
+app.use(oakCors({ origin: "*" }));
 
 
 app.use(router.routes());
