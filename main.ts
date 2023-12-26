@@ -13,6 +13,7 @@ io.on("connection", (socket) => {
 });
 
 
+
 const app = new Application();
 import router from "./src/routes/defualt.ts";
 import AuthRoute from "./src/routes/auth.ts";

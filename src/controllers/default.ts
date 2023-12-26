@@ -2,10 +2,14 @@ import { Application, Context, Status } from "https://deno.land/x/oak/mod.ts";
 import database from "./../config/database.ts";
 import {Item } from "./../models/items.ts";
 import { StoreData, fetchAll, findByID,updateData,deleteByID, } from "./../helper/db_query.ts";
-
+import { pusher } from "../helper/pusher.ts";
 export const getItems = async (ctx: Context) => {
   const data = await fetchAll('items');
 
+  pusher.trigger("test-channel", "test-event", {
+    message: "This is My Pusher"
+  });
+  
   ctx.response.body = data;
   ctx.response.status = 200;
 };
