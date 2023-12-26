@@ -1,9 +1,10 @@
 import { Application, Context, Status } from "https://deno.land/x/oak/mod.ts";
 import database from "./../config/database.ts";
-import { create, fetchAll, findByID,update,deleteByID, Item } from "./../models/items.ts";
+import {Item } from "./../models/items.ts";
+import { StoreData, fetchAll, findByID,updateData,deleteByID, } from "./../helper/db_query.ts";
 
 export const getItems = async (ctx: Context) => {
-  const data = await fetchAll();
+  const data = await fetchAll('items');
 
   ctx.response.body = data;
   ctx.response.status = 200;
@@ -11,7 +12,7 @@ export const getItems = async (ctx: Context) => {
 
 export const getItemsById = async (ctx: Context) => {
   const { id } = ctx.params;
-  const item = await findByID(id);
+  const item = await findByID('items',id);
   if (item) {
     ctx.response.body = item;
   } else {
@@ -28,7 +29,7 @@ export const getItemsStore = async (ctx) => {
       name: requestBody.name,
       description: requestBody.description,
     };
-    const store = await create(newItem);
+    const store = await StoreData('items',newItem);
 
     console.log(`Inserted ${store} rows`);
 
@@ -49,7 +50,7 @@ export const ItemsUpdate = async (ctx: Context) => {
       name: requestBody.name,
       description: requestBody.description,
     };
-    const store = await update(newItem);
+    const store = await updateData('items',newItem);
 
     console.log(`Updated ${store} rows`);
 
@@ -62,7 +63,7 @@ export const ItemsUpdate = async (ctx: Context) => {
 
 export const ItemsDelete = async (ctx: Context) => {
   const { id } = ctx.params;
-  const data = await deleteByID(id);
+  const data = await deleteByID('items',id);
   console.log(`Deleted ${data} rows`);
 
   if (data > 0) {
