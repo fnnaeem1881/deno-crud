@@ -86,3 +86,4 @@ export const Registration = async (ctx: Context) => {
     ctx.response.body = { error: "somthing wrong" };
   }
 };
+
