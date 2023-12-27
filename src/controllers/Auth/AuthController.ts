@@ -69,7 +69,8 @@ export const Login = async (ctx) => {
         userId: user.id,
         name: user.name,
         mobile: user.mobile,
-        token: access_token,
+        access_token: access_token,
+        refresh_token: refresh_token,
       };
     } else {
       ctx.response.status = 500;
