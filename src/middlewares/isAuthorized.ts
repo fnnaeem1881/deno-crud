@@ -1,20 +1,7 @@
 import database from "./../../config/database.ts";
-import {
-  Application,
-  Context,
-  RouterContext,
-  Status,
-} from "https://deno.land/x/oak/mod.ts";
+import {Application,Context,RouterContext,Status,} from "https://deno.land/x/oak/mod.ts";
 import { verifyJwt } from "../helper/jwt.ts";
-import {
-  deleteByID,
-  fetchAll,
-  findByEmail,
-  findByID,
-  findByMobile,
-  StoreData,
-  updateData,
-} from "./../../helper/db_query.ts";
+import { deleteByID, fetchAll, findByEmail, findByID, findByMobile, StoreData, updateData,} from "./../../helper/db_query.ts";
 
 export const authorized = async (ctx: Context, next: () => Promise<unknown>) => {
   try {
@@ -63,10 +50,9 @@ export const authorized = async (ctx: Context, next: () => Promise<unknown>) => 
       };
       return;
     }
-
-    ctx.state["user_id"] = user.id;
+    ctx.state.user = user[0];
     await next();
-    delete ctx.state.user_id;
+    delete ctx.state.user;
   } catch (error) {
     ctx.response.status = 500;
     ctx.response.body = {

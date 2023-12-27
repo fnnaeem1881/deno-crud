@@ -13,15 +13,16 @@
         var pusher = new Pusher('1ee622cf7ae9168aca28', {
             cluster: 'ap2'
         });
-        var channel = pusher.subscribe('test-channel');
-        channel.bind('test-event', function (data) {
+        var channel = pusher.subscribe('trips-channel-2-1');
+        channel.bind('trips-event-2-1', function (data) {
             // alert(JSON.stringify(data));
+            console.log(data);
             fetchDataFromApi();
         });
         fetchDataFromApi();
 
         function fetchDataFromApi() {
-            const token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ3ZWJzaXRlLmNvbSIsImlhdCI6MTcwMzY1NDY4MiwiZXhwIjoxNzAzNjU3NjgzLCJzdWIiOjF9.juRLTgxgAhJaVtis0Dg_Ugnjvo43AXXSbmW45-Hql9zMw4TCvrhaJJQka_l-hfXE8FOFKIV5GuXSE182BDSQCJlppYVbThYF3cItFmPMeL-b8U_8QDNW_DtfelWYF3MxnJwBGHEDzIcUlwmaBdLofyOBl2KRNR_3ohrlibMLgZ4Okc1gvqD5nETrQOICWvcKV7jXugX6_gzjmOkizER9xMNw1kpic9be77R7A0kuHaPCUZql1F6NQM62tpa8lI9kaufiRE0bWLW-cn2G3fmEod307XXmXbzuROOX2CW_qqpnwz_ozYZlwrIm4KlWxGMjW8hPcc3HbF-ffJcVbtRkhDvy05YODMQ7EKhphITQWR90YHlw1LciqkwCG4Ng0q6W1EC7D-ycN5Y0siDzj4JWGOISfjctvcgLIt9RKMWzULFtWqQ2RPrOUFDJkWQTn_ubBjPnN0rK10eQP2LiBVpUXAMbp0I05abOB6kC3-ByJ23UVD2O6ueTm3C20Wc28WmJcRDFHtfmGpCxsmCK-D7-S7L2ShSaVHiOgOJy1BL6BADIDjbM-D9W_jOCPubM_aJcDWFIg1uyUkZxkrxoum5sT13LZ8zEvaYkCvSh0RU8cx4ykChrie1IjuS5kJY_Uj2IhX1BSZRTiyN2BhSu59n_8kPmkZlHuOwU_ihCSfoRDiY';
+            const token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ3ZWJzaXRlLmNvbSIsImlhdCI6MTcwMzY3MDg4NCwiZXhwIjoxNzAzNjczODg0LCJzdWIiOjF9.pnliQII_XjkOMTs49iyNpojwq0X--35q-KU2Sm5vrKOHLvtJvWZURh3GtwvCecgSuQy9inwWt8vvMgnGrYvp0f5uENcREriN0LVqvWQSZlCH0FWLiergVdyBv_cjEDvj4wo2NYpsimP3Oou0mshoLenMUkmUYYtwm87Ii7NMFeeA3FUpLZrWFGgA0aNNGTupcT7BE9l59PeITjHUN5aQHwQ7yiBA1_7t-h9f5uaH7UT0Ly5HRcuxTkaBd5Vy8yuig4t6TqYG8R9ySAEhr9MT9iw9sPbJMcDYoKHQc4o8JuIa1dB9LK8tCk39H21IGZaGr-PxvkfeYxjKbSfkNQZ1xqUv7iiHzC_zZ50i-1x_9Uu4HTqTqbo9YIToX0tM08RlP0Jgek6MSg6-zBlcLxHAlcDf0ujE6_HpGuXlFyQK2s9g3gMJiPKSKu8t01q10vO63w_-xlATdhuCev1W9WSmaUbuACSnYTOHlgWzegOvpWeacon-H5pTf4Kd6XK0zjXQc8cfvNPDR790C_wowVZJ5qDSHijBQLKpQP24FBxr2KmIij9ci9jF0H_sY01vJKHlP0fAnQdbehwAvdWXLNPQNHRJ_INxuKFTbAgK-OqNg19PEam53buOWzn-GFy0Jc34_08neXGmyXAD3NkGo-n4hqLg1JasSljzL-2QXdqFrnI';
 
             fetch('http://127.0.0.1:8000/items', {
                 headers: {

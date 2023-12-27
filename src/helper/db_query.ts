@@ -18,7 +18,7 @@ export const fetchAll = async (table: string): Promise<any[]> => {
       values,
     );
   
-    return result.affectedRows;
+    return result;
   };
   
   export const findByID = async (table: string, id: any): Promise<any> => {

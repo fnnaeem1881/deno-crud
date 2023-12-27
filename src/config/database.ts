@@ -43,5 +43,20 @@ await database.execute(`
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 `);
 
+await database.execute(`
+    CREATE TABLE IF NOT EXISTS trips (
+        id INT(11) NOT NULL AUTO_INCREMENT,
+        car_name VARCHAR(100) NULL,
+        pick_up_location VARCHAR(100) NULL,
+        destination VARCHAR(100) NULL,
+        driver_id INT(11) NULL,
+        user_id INT(11),
+        status INT(11) NOT NULL DEFAULT 1,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        FOREIGN KEY (driver_id) REFERENCES users(id),
+        FOREIGN KEY (user_id) REFERENCES users(id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+`);
 
 export default database

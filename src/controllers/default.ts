@@ -1,13 +1,7 @@
 import { Application, Context, Status } from "https://deno.land/x/oak/mod.ts";
 import database from "./../config/database.ts";
 import { Item } from "./../models/items.ts";
-import {
-  deleteByID,
-  fetchAll,
-  findByID,
-  StoreData,
-  updateData,
-} from "./../helper/db_query.ts";
+import { deleteByID, fetchAll, findByID, StoreData, updateData,} from "./../helper/db_query.ts";
 import { pusher } from "../helper/pusher.ts";
 import { redis } from "../helper/redis.ts";
 
@@ -15,19 +9,17 @@ import { ReceivedQueue, SendQueue } from "../helper/Queue.ts";
 
 export const getItems = async (ctx: Context) => {
   const data = await fetchAll("items");
-  const queue = "hello";
-  const message = "This Is Test Message";
+//   const queue = "hello";
+//   const message = "This Is Test Message";
   
-  const key = "example_key";
-  const value = "example_value";
-  const ok = await redis.set("hoge", "fuga");
- console.log(ok);
- const fuga = await redis.get("hoge");
- console.log('fuga',fuga);
+//   const ok = await redis.set(queue, message);
+//  console.log(ok);
+//  const fuga = await redis.get(queue);
+//  console.log('fuga',fuga);
  
-  redis.close();
+//   redis.close();
   
-  await SendQueue(queue, message);
+  // await SendQueue(queue, message);
   // var QueueChannel = await ReceivedQueue(queue);
   // QueueChannel.consume(queue, (msg) => {
   //   if (msg.content) {

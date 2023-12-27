@@ -18,6 +18,7 @@ io.on("connection", (socket) => {
 const app = new Application();
 import router from "./src/routes/defualt.ts";
 import AuthRoute from "./src/routes/auth.ts";
+import trips from "./src/routes/trips.ts";
 
 app.use(async (ctx, next) => {
   io.emit("hello", "world");
@@ -38,6 +39,7 @@ app.use(oakCors({ origin: "*" }));
 
 app.use(router.routes());
 app.use(AuthRoute.routes());
+app.use(trips.routes());
 app.use(router.allowedMethods());
 
 const PORT1 = 8000;
