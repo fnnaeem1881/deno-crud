@@ -1,0 +1,112 @@
+{% include 'layouts/header.html' %}
+
+    <div class="main-wrapper">
+
+        <!-- Breadscrumb Section -->
+		<div class="breadcrumb-bar ">
+			<div class="container">
+				<div class="row align-items-center text-center">
+		    		<div class="col-md-12 col-12">
+			    	    <h2 class="breadcrumb-title">Subscription Plan</h2>
+				    	<nav aria-label="breadcrumb" class="page-breadcrumb">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="#">Home</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Package list</li>
+							</ol>
+						</nav>							
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Breadscrumb Section -->
+
+        <section class="section live-package-request section-padding">
+            <div class="container">
+                <div class="section-content">
+                    <div class="row">
+                        {% for item in package %}
+                            <div class="col-xl-4 col-md-4 col-sm-6 col-12">
+                                <div class="single-package-request bg-white hover-animation-wrap text-center">
+                                    <h2 class="bg-secondary p-2 text-white rounded-3 m-0"> {{ item.package_name }}</h2>
+                                    <div class="p-2">
+                                        <ul class="list-group">
+                                            <li class="list-group-item"><b>Validity  : </b> {{ item.package_duration }} Days</li>
+                                            <li class="list-group-item"><b>Description : </b> {{ item.package_description }} Days</li>
+                                            <li class="list-group-item"><b>Amount : </b> <span class="text-primary fs-3"><b> {{ item.amount }}</b> <sub>TK</sub></span></li>
+                                        </ul>
+                                        <!-- <a 
+                                            style="text-decoration: none;" 
+                                            href="/package/purchase/{{item.id}}"
+                                        > -->
+                                        <button 
+                                            type="submit" 
+                                            class="btn-theme-primary d-block mt-2 w-100 purchase-btn"
+                                            data-bs-toggle="modal" data-bs-target="#paymentType"
+                                            data-package-id="{{ item.id }}"
+                                        >
+                                            Purchase 
+                                        </button>
+                                        <!-- </a> -->
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+    </div>
+
+
+
+
+    <!-- Payment Type Model -->
+    <div class="modal fade theme-tab-model payment-type-model" id="paymentType" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"    aria-labelledby="paymentTypeLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close header-btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="ptm-header-wrap">
+                        <img src="{{ url_for('assets', path='image/garibook-logo.png') }}" alt="" height="100px" width="100px">
+                        <h5 class="m-0">Garibook.com</h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="ptm-content-wrap">
+                        <div class="d-flex flex-wrap justify-content-center align-items-center gap-3">
+                            <a href="#" data-payment-method="bkash" class="payment-link w-50">
+                                <img src="{{ url_for('assets', path='image/payment_icon/bkash.png') }}" alt="" height="auto" width="100%">
+                            </a>
+                            
+                            <a href="#" data-payment-method="nagad" class="payment-link w-50">
+                                <img src="{{ url_for('assets', path='image/payment_icon/nagad.png') }}" alt="" height="auto" width="100%">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modal = new bootstrap.Modal(document.getElementById('paymentType'));
+        var purchaseButtons = document.querySelectorAll('.purchase-btn');
+        var paymentLinks = document.querySelectorAll('.payment-link');
+        purchaseButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var packageId = button.getAttribute('data-package-id');
+                console.log(packageId);
+                paymentLinks.forEach(function (link) {
+                    var paymentMethod = link.getAttribute('data-payment-method');
+                    link.href = "/package/purchase/" + packageId + "?method=" + paymentMethod;
+                });
+                modal.show();
+            });
+        });
+    });
+</script>
+    
+{% include 'layouts/footer.html' %}

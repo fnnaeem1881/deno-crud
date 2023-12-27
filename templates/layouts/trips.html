@@ -1,0 +1,90 @@
+<div class="col-xl-4 col-md-4 col-sm-6 col-12">
+    <div class="single-card-request bg-white hover-animation-wrap">
+        <div class="scr-wrap">
+            <div class="scr-image position-relative">
+                {% if item.car_name == "Sedan" or  item.car_name == "Sedan Premium" %}
+                <img src="{{ url_for('assets', path='image/cars/sedan.jpg') }}" alt="" class="scr-image">
+                {% elif item.car_name == "Noah" %}
+                <img src="{{ url_for('assets', path='image/cars/noah.jpg') }}" alt="" class="scr-image">
+                {% elif item.car_name == "HiAce" or  item.car_name == "Hiace" %}
+                <img src="{{ url_for('assets', path='image/cars/Hiace.png') }}" alt="" class="scr-image">
+                {% elif item.car_name == "Tourist Bus" %}
+                <img src="{{ url_for('assets', path='image/cars/bus.jpg') }}" alt="" class="scr-image">
+                {% else %}
+                <img src="{{ url_for('assets', path='image/cars/card-1.jpg') }}" alt="" class="scr-image">
+                {% endif %}
+                <div class="scr-customer-image">
+                    
+                    <img class="scr-c-image"
+                        src="{{ url_for('assets', path='/upload/profile/' + item.customer.image) }}"
+                        alt="">
+                </div>
+                <div class="scr-car-label">
+                    <span>{{ item.car_name }}</span>
+                </div>
+            </div>
+            <div class="scr-text mt-4">
+                <div class="scr-header py-2">
+                    <h2>{{ item.car_name }}</h2>
+                    <div class="rating d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                        <i class="fa-regular fa-star"></i>
+                        <span>(5.0)</span>
+                    </div>
+                </div>
+                <div class="scr-body">
+                    <!-- <ul class="list-unstyled d-flex justify-content-between p-0 m-0">
+                        <li>
+                            <span><img
+                                    src="{{ url_for('assets', path='image/icons/car-parts-01.svg') }}"
+                                    alt="Auto"></span>
+                            <p>Auto</p>
+                        </li>
+                        <li>
+                            <span><img
+                                    src="{{ url_for('assets', path='image/icons/car-parts-03.svg') }}"
+                                    alt="10 KM"></span>
+                            <p>petrol</p>
+                        </li>
+                        <li>
+                            <span><img
+                                    src="{{ url_for('assets', path='image/icons/car-parts-06.svg') }}"
+                                    alt="Petrol"></span>
+                            <p>5 person</p>
+                        </li>
+                    </ul> -->
+                    <div
+                        class="scr-locaiton d-flex align-items-center justify-content-between mb-3">
+                        <p class="mb-0">
+                            <i class="fa-solid fa-location-dot"></i>
+                            {{item.pick_up_location}}
+                        </p>
+                        <i class="fa-solid fa-car-side"></i>
+                        <p class="mb-0">
+                            <i class="fa-solid fa-location-dot"></i>
+                            {{item.location}}
+                        </p>
+                    </div>
+                    {% if user %}
+						{% if user.user_type ==1 %}
+                            <a href="/show/bid/{{item.id}}">
+                                <button type="button" class="btn-theme-primary w-100">Show Bids</button>
+                            </a>
+                        {% else %}
+                            <a href="/bid/submit/{{item.id}}">
+                                <button type="button" class="btn-theme-primary w-100">Bid Now</button>
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="/bid/submit/{{item.id}}">
+                            <button type="button" class="btn-theme-primary w-100">Bid Now</button>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

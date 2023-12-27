@@ -1,0 +1,15 @@
+@media screen and (max-width: 800px) {
+    section.section-padding{
+        padding: 40px 0 0;
+    }
+    .car-holder{
+        margin-top: 15px;
+    }
+    .userapp-heading{text-align: center;}
+}
+
+@media screen and (max-width: 767px) {
+    .header-wrapper .navbar-brand>img {
+        width: 130px !important;
+    }
+}

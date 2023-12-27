@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Garibook.com</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- bootstrap   -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- font-family: 'Raleway', sans-serif; -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
+        rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+</head>
+
+<body>
+
+    <header class="header-wrapper">
+        <div class="container">
+            <div class="col-md-12">
+                <nav class="navbar">
+                    <div class="container-fluid">
+                        <a class="navbar-brand m-0" href="/">
+                            <img src="https://garibook.com/dashboard/new-ui/assets/image/icon/logo.png" alt="Logo"
+                                width="200" class="d-inline-block align-text-top">
+                        </a>
+                        <div class="d-flex">
+                            <!-- login Modal -->
+                            <div class="modal fade theme-tab-model" id="loginModal" tabindex="-1"
+                                aria-labelledby="loginModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header p-0 border-0">
+                                            <nav class="auth-tab-header w-100">
+                                                <div class="nav nav-tabs w-100 bg-light" role="tablist">
+                                                    <button class="nav-link driver active w-50 py-3"
+                                                        id="nav-driverLogin-tab" data-bs-toggle="tab"
+                                                        data-bs-target="#nav-driverLogin" type="button" role="tab"
+                                                        aria-controls="nav-home" aria-selected="true">Driver Sign
+                                                        in</button>
+                                                    <button class="nav-link customer w-50 py-3"
+                                                        id="nav-customerLogin-tab" data-bs-toggle="tab"
+                                                        data-bs-target="#nav-customerLogin" type="button" role="tab"
+                                                        aria-controls="nav-profile" aria-selected="false">Customer Sign
+                                                        in</button>
+                                                </div>
+                                            </nav>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="login-form-wrapper">
+                                                <div class="tab-content">
+                                                    <div class="tab-pane fade show active" id="nav-driverLogin"
+                                                        role="tabpanel" aria-labelledby="nav-driverLogin-tab"
+                                                        tabindex="0">
+                                                        <form method="POST" action="/driver-login" id="driverLoginForm">
+                                                            <div class="mb-3">
+                                                                <label for="usermail" class="form-label">Email
+                                                                    address</label>
+                                                                <input type="email" class="form-control" name="email"
+                                                                    id="usermail" aria-describedby="emailHelp">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="userPassword"
+                                                                    class="form-label">Password</label>
+                                                                <input type="password" class="form-control"
+                                                                    name="password" id="userPassword">
+                                                            </div>
+                                                            <button type="submit"
+                                                                class="btn-theme-primary w-100">Login</button>
+                                                        </form>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="nav-customerLogin" role="tabpanel"
+                                                        aria-labelledby="nav-customerLogin-tab" tabindex="0">
+                                                        <form method="post" action="/customer-login"
+                                                            id="customerLoginForm">
+                                                            <div class="mb-3">
+                                                                <label for="usermail" class="form-label">Email
+                                                                    address</label>
+                                                                <input type="email" class="form-control" name="email"
+                                                                    id="email" aria-describedby="emailHelp">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="userPassword"
+                                                                    class="form-label">Password</label>
+                                                                <input type="password" class="form-control"
+                                                                    name="password" id="userPassword">
+                                                            </div>
+                                                            <button type="submit"
+                                                                class="btn-theme-secondary w-100">Login</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Register Modal -->
+                            <div class="modal fade theme-tab-model" id="registerModal" tabindex="-1"
+                                aria-labelledby="registerModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header p-0 border-0">
+                                            <nav class="auth-tab-header w-100">
+                                                <div class="nav nav-tabs w-100" role="tablist">
+                                                    <button class="nav-link driver active w-50 py-3"
+                                                        id="nav-driverResister-tab" data-bs-toggle="tab"
+                                                        data-bs-target="#nav-driverResister" type="button" role="tab"
+                                                        aria-controls="nav-home" aria-selected="true">Driver
+                                                        Register</button>
+                                                    <button class="nav-link customer w-50 py-3"
+                                                        id="nav-customerResister-tab" data-bs-toggle="tab"
+                                                        data-bs-target="#nav-customerResister" type="button" role="tab"
+                                                        aria-controls="nav-profile" aria-selected="false">Customer
+                                                        Register</button>
+                                                </div>
+                                            </nav>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="error_div  mt-3">
+                                                <!-- {% if error_customer %}
+                                                <div class="alert alert-danger" role="alert">
+                                                    {{ error_customer }}
+                                                </div>
+                                                {% elif success_customer %}
+                                                <div class="alert alert-success" role="alert">
+                                                    {{ success_customer }}
+                                                </div>
+                                                {% endif %} -->
+                                            </div>
+                                            <div class="register-form-wrapper">
+                                                <div class="tab-content">
+                                                    <div class="tab-pane fade show active" id="nav-driverResister"
+                                                        role="tabpanel" aria-labelledby="nav-driverResister-tab"
+                                                        tabindex="0">
+                                                        <form action="/driver/register/submit" method="post"
+                                                            enctype="multipart/form-data">
+                                                            <div class="form-floating mb-3">
+                                                                <input type="text" class="form-control" name="name"
+                                                                    id="name" placeholder="Driver Name ... ">
+                                                                <label for="name">Name</label>
+                                                            </div>
+                                                            <div class="form-floating mb-3">
+                                                                <input type="email" class="form-control" name="email"
+                                                                    id="email" placeholder="name@example.com">
+                                                                <label for="name">Email Address</label>
+                                                            </div>
+                                                            <div class="form-floating mb-3">
+                                                                <input type="password" class="form-control"
+                                                                    name="password" id="password"
+                                                                    placeholder="*********">
+                                                                <label for="password">Password</label>
+                                                            </div>
+                                                            <div class="form-floating mb-3">
+                                                                <input type="password" class="form-control"
+                                                                    name="confirm_password" id="confirm_password"
+                                                                    placeholder="*********">
+                                                                <label for="confirm_password">Confirm Password</label>
+                                                            </div>
+                                                            <div class="form-group mb-3">
+                                                                <input type="file" class="form-control" name="image"
+                                                                    id="image">
+                                                            </div>
+                                                            <input type="submit" class="btn btn-primary"
+                                                                value="Driver Register">
+                                                        </form>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="nav-customerResister" role="tabpanel"
+                                                        aria-labelledby="nav-customerResister-tab" tabindex="0">
+                                                        <form action="/customer/register/submit" method="post"
+                                                            enctype="multipart/form-data">
+                                                            <div class="form-floating mb-3">
+                                                                <input type="text" class="form-control" name="name"
+                                                                    id="name" placeholder="Driver Name ... ">
+                                                                <label for="name">Name</label>
+                                                            </div>
+                                                            <div class="form-floating mb-3">
+                                                                <input type="email" class="form-control" name="email"
+                                                                    id="email" placeholder="name@example.com">
+                                                                <label for="name">Email Address</label>
+                                                            </div>
+                                                            <div class="form-floating mb-3">
+                                                                <input type="password" class="form-control"
+                                                                    name="password" id="password"
+                                                                    placeholder="*********">
+                                                                <label for="password">Password</label>
+                                                            </div>
+                                                            <div class="form-floating mb-3">
+                                                                <input type="password" class="form-control"
+                                                                    name="confirm_password" id="confirm_password"
+                                                                    placeholder="*********">
+                                                                <label for="confirm_password">Confirm Password</label>
+                                                            </div>
+                                                            <div class="form-group mb-3">
+                                                                <input type="file" class="form-control" name="image"
+                                                                    id="image" placeholder="name@example.com">
+                                                            </div>
+                                                            <input type="submit" class="btn btn-success"
+                                                                value="Customer Register">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="auth-header-wrap d-flex gap-2">
+                                <button type="button" class="btn-theme-primary" data-bs-toggle="modal"
+                                    data-bs-target="#loginModal">Sign In</button>
+                                <button type="button" class="btn-theme-secondary" data-bs-toggle="modal"
+                                    data-bs-target="#registerModal">Register</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+<div class="main-wrapper">
+	<!-- Banner -->
+	<section class="banner-section banner-slider">
+		<div class="container">
+			<div class="home-banner">
+				<div class="row align-items-center">
+					<div class="col-lg-6">
+						<p class="explore-text"> <span><i class="fa-solid fa-thumbs-up me-2"></i></span>100% Trusted car
+							rental platform in the Bangladesh</p>
+						<h1>Ride Your <br>
+							<span><b class="text-primary"> Dream Car</b> Today </span>
+						</h1>
+						<p class="mb-3">
+							Garibook provides various kinds of vehicle from economy, Comfort to Luxury class. For
+							Booking any class and model vehicle online simply enter your pickup and drop locations then
+							select car type.
+						</p>
+						<div class="view-all ">
+							<a href="#" class="btn-theme-primary text-decoration-none d-inline-block">
+								View all Cars
+							</a>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="banner-imgs">
+							<img src="https://i.postimg.cc/0QmcvYYQ/image.png" class="img-fluid aos" alt="bannerimage">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- /Banner -->
+
+	<!-- services -->
+	<section class="section services section-padding">
+		<div class="container">
+			<div class="section-content">
+				<div class="row">
+					<div class="col-md-3 col-sm-6 col-12">
+						<div class="ht-box-icon hover-animation-wrap">
+							<div class="icon-box-wrap mb-3">
+								<div class="icon">
+									<img src="https://garibook.com/dashboard/new-ui/assets/image/icon/secvice_box_2.png"
+										alt="">
+								</div>
+								<div class="content">
+									<h6 class="sub-heading text-white">01</h6>
+									<h5 class="heading text-white">Country Wise Network</h5>
+									<p class="text text-white mb-0	">City based vendor, easy customer solution.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-6 col-12">
+						<div class="ht-box-icon hover-animation-wrap">
+							<div class="icon-box-wrap mb-3">
+								<div class="icon">
+									<img src="https://garibook.com/dashboard/new-ui/assets\image\icon\secvice_box_3.png"
+										alt="">
+								</div>
+								<div class="content">
+									<h6 class="sub-heading text-white">02</h6>
+									<h5 class="heading text-white">Worldwide Coverage</h5>
+									<p class="text text-white mb-0	">10 Countries • 30 Cities 20 Airports</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-6 col-12">
+						<div class="ht-box-icon hover-animation-wrap">
+							<div class="icon-box-wrap mb-3">
+								<div class="icon">
+									<img src="https://garibook.com/dashboard/new-ui/assets/image/icon/service_box_4.png"
+										alt="">
+								</div>
+								<div class="content">
+									<h6 class="sub-heading text-white">03</h6>
+									<h5 class="heading text-white">Safety & Security</h5>
+									<p class="text text-white mb-0	">Quality, safe & licensed vehicles professional
+										drivers.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-6 col-12">
+						<div class="ht-box-icon hover-animation-wrap">
+							<div class="icon-box-wrap mb-3">
+								<div class="icon">
+									<img src="https://garibook.com/dashboard/new-ui/assets/image/icon/service_box_5.png"
+										alt="">
+								</div>
+								<div class="content">
+									<h6 class="sub-heading text-white">04</h6>
+									<h5 class="heading text-white">Easy Payment</h5>
+									<p class="text text-white mb-0	">No hidden costs pay via trusted partners. Easy
+										cancellation policy.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- /services -->
+
+
+	<!-- live car request -->
+	<section class="section live-card-request section-padding">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="section-header text-center">
+						<h2>Live Car Request</h2>
+						<!-- <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rerum possimus fugiat saepe ab ex
+							repellendus incidunt vero est sunt architecto?</p> -->
+					</div>
+				</div>
+			</div>
+			<!-- <div class="section-content section-inside-top-margin">
+				<div class="row">
+					{% for item in HomeTrips %}
+					{% if user %}
+					{% if user.user_type ==1 %}
+					{% if item.user_id == user.id %}
+
+					asd
+					
+					{% endif %}
+					{% else %}
+					as
+					{% endif %}
+					{% else %}
+					asd
+					{% endif %}
+					{% endfor %}
+
+
+				</div>
+			</div> -->
+		</div>
+	</section>
+	<!-- /live car request END -->
+
+	<section id="your-middle-section-id">
+		<div class="container">
+			<div class="row data-container">
+
+			</div>
+			<div class="col-md-12 mt-4">
+				<div class="text-center">
+					<div class="ajax_load" style="display: none">
+						<div class="spinner-border text-success spinner-border-md" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+						<div class="spinner-grow text-success spinner-grow-md" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<span id="no-data-message"> No Trips Found</span>
+			<button id="load-more-btn" style="margin: auto;display: block;background: #a0d04c;border: none;padding: 11px 25px;color: #fff;margin-top: 25px;">Load More</button>
+		</div>
+
+	</section>
+	<!-- live car request -->
+	<section class="section download-app-section section-padding">
+		<div class="container">
+			<div class="section-content">
+				<div class="row align-items-center">
+					<div class="col-lg-7">
+						<div class="userapp-heading">
+							<div class="section-header text-left">
+								<h2>Download the Garibook App</h2>
+								<p>Garibook offers exclusive airport pickup and drop-off service for all local and
+									international passengers. Garibook offers Single trip, Round trip, and Multicity car
+									services. Garibook also offers car rental services for individuals and corporates.
+									Garibook has services in the United Kingdom, United Arab Emirates, Malaysia, and
+									Thailand.</p>
+							</div>
+							<div
+								class="download-btn d-flex gap-2 flex-wrap justify-content-center justify-content-md-start">
+								<div class="app-avilable">
+									<a href="https://play.google.com/store/apps/details?id=com.garibook.user&pli=1">
+										<img src="https://garibook.com/dashboard/new-ui/assets/image/icon/google_play.png"
+											width="150" alt="PlayStore">
+									</a>
+								</div>
+								<div class="app-avilable">
+									<a href="https://apps.apple.com/us/app/garibook/id6444159035?platform=iphone">
+										<img src="https://garibook.com/dashboard/new-ui/assets/image/icon/app_store_ios.png"
+											width="150" alt="AppStore">
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-5">
+						<div class="car-holder">
+							<img class="app-car img-fluid" src="{{ url_for('assets', path='image/cars/app-car.png') }}"
+								alt="App Available">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- /live car request END -->
+
+	<!-- Contact us -->
+	<section class="contact-section section-padding">
+		<div class="container">
+			<div class="form-info-area">
+				<div class="row">
+					<div class="col-lg-6">
+						<img src="{{ url_for('assets', path='image/contact-info.jpg') }}" class="img-fluid"
+							alt="Contact">
+					</div>
+					<div class="col-lg-6">
+						<form action="#">
+							<div class="row">
+								<div class="section-header">
+									<h2>Get in touch!</h2>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>Name <span class="text-danger">*</span></label>
+										<input type="text" class="form-control" placeholder="">
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>Email Address <span class="text-danger">*</span></label>
+										<input type="text" class="form-control" placeholder="">
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>Phone number <span class="text-danger">*</span></label>
+										<input type="text" class="form-control" placeholder="">
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>Comments <span class="text-danger">*</span></label>
+										<textarea class="form-control" rows="4" cols="50" placeholder="">
+												</textarea>
+									</div>
+								</div>
+							</div>
+							<button class="btn-theme-primary w-100 mt-3">Send Enquiry</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- /Contact us -->
+
+</div>
+
+
+
+{% include 'layouts/footer.html' %}

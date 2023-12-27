@@ -9,6 +9,7 @@ import {
   updateData,
 } from "./../helper/db_query.ts";
 import { pusher } from "../helper/pusher.ts";
+import { redis } from "../helper/redis.ts";
 
 import { ReceivedQueue, SendQueue } from "../helper/Queue.ts";
 
@@ -16,15 +17,25 @@ export const getItems = async (ctx: Context) => {
   const data = await fetchAll("items");
   const queue = "hello";
   const message = "This Is Test Message";
-  // await SendQueue(queue, message);
-  var QueueChannel = await ReceivedQueue(queue);
-  QueueChannel.consume(queue, (msg) => {
-    if (msg.content) {
-      console.log("Received message:", msg.content.toString());
-    }
-  }, {
-    noAck: true,
-  });
+  
+  const key = "example_key";
+  const value = "example_value";
+  const ok = await redis.set("hoge", "fuga");
+ console.log(ok);
+ const fuga = await redis.get("hoge");
+ console.log('fuga',fuga);
+ 
+  redis.close();
+  
+  await SendQueue(queue, message);
+  // var QueueChannel = await ReceivedQueue(queue);
+  // QueueChannel.consume(queue, (msg) => {
+  //   if (msg.content) {
+  //     console.log("Received message:", msg.content.toString());
+  //   }
+  // }, {
+  //   noAck: true,
+  // });
 
   ctx.response.body = data;
   ctx.response.status = 200;
@@ -50,6 +61,8 @@ export const getItemsStore = async (ctx) => {
       description: requestBody.description,
     };
     const store = await StoreData("items", newItem);
+
+
     const channel = "test-channel";
     const event = "test-event";
     const Pusherdata = {

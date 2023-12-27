@@ -1,0 +1,160 @@
+{% include 'layouts/header.html' %}
+
+
+    <div class="main-wrapper">
+
+        <!-- Breadscrumb Section -->
+		<div class="breadcrumb-bar">
+			<div class="container">
+				<div class="row align-items-center text-center">
+		    		<div class="col-md-12 col-12">
+			    	    <h2 class="breadcrumb-title">Trip List</h2>
+				    	<nav aria-label="breadcrumb" class="page-breadcrumb">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="#">Home</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Trip list</li>
+							</ol>
+						</nav>							
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Breadscrumb Section -->
+
+        <div class="trip-list-wrapper mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table id="example" class="display nowrap table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Car Name</th>
+                                        <th scope="col">Pickup location </th>
+                                        <th scope="col">Destination</th>
+                                        <th scope="col">Booking Time</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="TripListShow">
+                                    <!-- <tr>
+                                        <th scope="row">23456</th>
+                                        <td>Toyota Corolla X</td>
+                                        <td><p class="text-success m-0">Mohammadpur (Dhaka) - Pirojpur (Barsal)</p></td>
+                                        <td><p class="text-success m-0"><b>Pick Time: </b> 12:00 PM</p> </td>
+                                        <td>
+                                            <button type="button" class="btn btn-info text-white">Bid Now</button>
+                                        </td>
+                                    </tr> -->
+    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- modal ID -->
+    <div class="modal fade" id="subscriptionModal" tabindex="-1" role="dialog" aria-labelledby="subscriptionModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="subscribe-wrapper text-center">
+                        <div class="sw-icon mb-2">
+                           <img src="{{ url_for('assets', path='image/icons/danger-icon.png') }}" alt="" width="80" height="80">
+                        </div>
+                        <div class="sw-content">
+                            <h4 class="text-danger">You are not Subscribed</h2>
+                            <p class="text-primary">Enjoy unlimited bidding after subscription</p>
+                            <a href="/driver/package" class="btn-theme-primary text-decoration-none d-block">Subscribe Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        const socket = io(`ws://{{base_url}}:8000/`, { transports: ["websocket"] });
+        socket.on("tripList", function (data) {
+            console.log(data);
+            TripGet();
+
+        });
+        TripGet()
+
+        function TripGet() {
+            $.ajax({
+                url: '/trips/get',
+                method: 'GET',
+                success: function (data) {
+                    if ($.fn.DataTable.isDataTable('#example')) {
+                        $('#example').DataTable().clear(); // Clear DataTable
+                        $('#example').DataTable().destroy(); // Destroy existing DataTable instance
+                    }
+                    console.log(data);
+                    $('#TripListShow').empty(); // Clear old data
+                    if (data.length === 0) {
+                        // $('#TripListShow').html('<tr><td colspan="5">No trips found</td></tr>');
+                    } else {
+                        for (var i = 0; i < data.length; i++) {
+                            var row = $('<tr>');
+                            var date = new Date(data[i].created_at);
+                            var formattedDate = date.toLocaleString();
+                            var index = i + 1; // Incrementing index
+                            row.append('<th scope="row">' + index + '</th>');
+                            row.append('<td>' + data[i].car_name + '</td>');
+                            row.append('<td><p class="text-success m-0">' + data[i].pick_up_location + '</p></td>');
+                            row.append('<td><p class="text-success m-0">' + data[i].location + '</p></td>');
+                            row.append('<td><p class="text-success m-0">' + formattedDate + '</p></td>');
+                            // row.append('<td><a href="/bid/submit/' + data[i].id + '" class="btn btn-info text-white" id="bid_now_button">Bid Now</a></td>');
+                            row.append('<td><a href="/bid/submit/' + data[i].id + '" class="btn btn-info text-white" id="bid_now_button">Bid Now</a></td>');
+
+                            $('#TripListShow').append(row);
+                        }
+                        console.log("i am 1st")
+                    }
+
+                    $('#example').DataTable({
+                        dom: 'Bfrtip',
+                        "order": [[0, "asc"]]
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function(){
+            var isCheckSubscription = {{user.subscription_status}};
+            $(document).on("click", "#bid_now_button", function(event) {
+                event.preventDefault();
+
+                if (isCheckSubscription === 1) {
+                    var currentHref = $(this).attr("href");
+                    var newHref = currentHref;
+                    window.location.href = newHref;
+                } else {
+                    $("#subscriptionModal").modal('show');
+                }
+            });
+        })
+
+    </script>
+
+
+{% include 'layouts/footer.html' %}
