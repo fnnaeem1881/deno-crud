@@ -14,13 +14,14 @@
             cluster: 'ap2'
         });
         var channel = pusher.subscribe('test-channel');
-        channel.bind('test-event', function () {
+        channel.bind('test-event', function (data) {
+            // alert(JSON.stringify(data));
             fetchDataFromApi();
         });
         fetchDataFromApi();
 
         function fetchDataFromApi() {
-            const token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ3ZWJzaXRlLmNvbSIsImlhdCI6MTcwMzU4NjkxMiwiZXhwIjoxNzAzNTg3ODEyLCJzdWIiOjF9.Ml5_1BjLXJ45_Mqwj8pgwGqERz8M9HQk3WEpX6TKnozNFN5OpdiM4qgBjKx2z5T-dvZ6H8qn4cyd-GP8op4W_PVc5OZtvC7ZUFAPFYx9pV6HJb3R-xRgncvB9bm5YKjE4TXEI11N4Ksa-hdb55nqN3cGlzhfSOK_8CkI4X7VHIXThRghM5yL7cbNBTnW2QS-ae0-2_rMHqlIk13fuWhIx8b3ifjiO7NaNHvx2euA8fjhggLID3rrKs2wr3mwsIjHlK8G1F_6zfB_HF7gtnPqwq_JSqfcinN1P3faV6CF-zCvgA2qUQqlscnimK7Xg3SbmEM0yXgndD3_6y7SfAfsyWZ_SqfjcUujBt8yvcu6gZU44MndkCeWGS0MxMpTIDzCt9A27gaOYNfs0B3Kjyg5jkdqVUUU_D7xuyq87Ly2tm7Lxuz7W8cfXtYM8sS9hBg-xOYCx4zM7YN5LRj3CVnrVAg7MNrYigCm1Tc7_oVEY8b5W0iO80zc_IaXD2ySAvV0B7YlEXNajPbMbMGIJAfBlnZubAcv50zYu7fZYW8S8Or8stk3MtliJ1lnw-Yxisi30t3ml1tb4F92gSPjacbltNU5eB2iNCx-DjVmaeFSpYiEH_103KQLjQxCBkaBsv-o813xZ3Ul1CNAzqkynkchqBH1ztj-jqFmWO4Msc87PJE';
+            const token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ3ZWJzaXRlLmNvbSIsImlhdCI6MTcwMzY1NDY4MiwiZXhwIjoxNzAzNjU3NjgzLCJzdWIiOjF9.juRLTgxgAhJaVtis0Dg_Ugnjvo43AXXSbmW45-Hql9zMw4TCvrhaJJQka_l-hfXE8FOFKIV5GuXSE182BDSQCJlppYVbThYF3cItFmPMeL-b8U_8QDNW_DtfelWYF3MxnJwBGHEDzIcUlwmaBdLofyOBl2KRNR_3ohrlibMLgZ4Okc1gvqD5nETrQOICWvcKV7jXugX6_gzjmOkizER9xMNw1kpic9be77R7A0kuHaPCUZql1F6NQM62tpa8lI9kaufiRE0bWLW-cn2G3fmEod307XXmXbzuROOX2CW_qqpnwz_ozYZlwrIm4KlWxGMjW8hPcc3HbF-ffJcVbtRkhDvy05YODMQ7EKhphITQWR90YHlw1LciqkwCG4Ng0q6W1EC7D-ycN5Y0siDzj4JWGOISfjctvcgLIt9RKMWzULFtWqQ2RPrOUFDJkWQTn_ubBjPnN0rK10eQP2LiBVpUXAMbp0I05abOB6kC3-ByJ23UVD2O6ueTm3C20Wc28WmJcRDFHtfmGpCxsmCK-D7-S7L2ShSaVHiOgOJy1BL6BADIDjbM-D9W_jOCPubM_aJcDWFIg1uyUkZxkrxoum5sT13LZ8zEvaYkCvSh0RU8cx4ykChrie1IjuS5kJY_Uj2IhX1BSZRTiyN2BhSu59n_8kPmkZlHuOwU_ihCSfoRDiY';
 
             fetch('http://127.0.0.1:8000/items', {
                 headers: {
