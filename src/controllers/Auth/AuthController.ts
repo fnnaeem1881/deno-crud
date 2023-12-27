@@ -17,7 +17,12 @@ import {
   updateData,
 } from "./../../helper/db_query.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt/mod.ts";
-import { signJwt, verifyJwt,ACCESS_TOKEN_EXPIRES_IN,REFRESH_TOKEN_EXPIRES_IN } from "./../../helper/jwt.ts";
+import {
+  ACCESS_TOKEN_EXPIRES_IN,
+  REFRESH_TOKEN_EXPIRES_IN,
+  signJwt,
+  verifyJwt,
+} from "./../../helper/jwt.ts";
 
 export const Login = async (ctx) => {
   try {
@@ -119,12 +124,23 @@ export const Registration = async (ctx: Context) => {
   }
 };
 
-const refreshAccessTokenController = async ({
+export const refreshAccessTokenController = async (ctx: Context,{
   response,
   cookies,
 }: RouterContext<string>) => {
   try {
-    const refresh_token = await cookies.get("refresh_token");
+    const headers: Headers = ctx.request.headers;
+    const authorization = headers.get("Authorization");
+    const cookieToken = await ctx.cookies.get("refresh_token");
+    let refresh_token;
+
+    if (authorization) {
+      refresh_token = authorization.split(" ")[1];
+    } else if (cookieToken) {
+      refresh_token = cookieToken;
+    }
+
+
 
     const message = "Could not refresh access token";
 
@@ -154,13 +170,31 @@ const refreshAccessTokenController = async ({
     const accessTokenExpiresIn = new Date(
       Date.now() + ACCESS_TOKEN_EXPIRES_IN * 60 * 1000,
     );
+    const refreshTokenExpiresIn = new Date(
+      Date.now() + REFRESH_TOKEN_EXPIRES_IN * 60 * 1000,
+    );
+    const userData = await findByID("users",  decoded.sub);
 
+    if (!userData || userData.length === 0) {
+      ctx.response.status = 404;
+      ctx.response.body = { message: `User not found` };
+      return;
+    }
+    const user = userData[0];
     const { token: access_token } = await signJwt({
-      user_id: decoded.sub,
-      issuer: "website.com",
+      user_id: user.id,
       privateKeyPem: "ACCESS_TOKEN_PRIVATE_KEY",
       expiresIn: accessTokenExpiresIn,
+      issuer: "website.com",
     });
+    const { token: refresh_token_new } = await signJwt({
+      user_id: user.id,
+      privateKeyPem: "REFRESH_TOKEN_PRIVATE_KEY",
+      expiresIn: refreshTokenExpiresIn,
+      issuer: "website.com",
+    });
+
+  
 
     // cookies.set("access_token", access_token, {
     //   expires: accessTokenExpiresIn,
@@ -169,8 +203,21 @@ const refreshAccessTokenController = async ({
     //   secure: false,
     // });
 
-    response.status = 200;
-    response.body = { status: "success", access_token };
+    if (access_token) {
+      ctx.response.status = 200;
+      ctx.response.body = {
+        userId: user.id,
+        name: user.name,
+        mobile: user.mobile,
+        access_token: access_token,
+        refresh_token: refresh_token_new,
+      };
+    } else {
+      ctx.response.status = 500;
+      ctx.response.body = {
+        message: "internal server error",
+      };
+    }
   } catch (error) {
     response.status = 500;
     response.body = { status: "error", message: error.message };
