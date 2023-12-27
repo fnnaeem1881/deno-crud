@@ -9,66 +9,22 @@ import {
   updateData,
 } from "./../helper/db_query.ts";
 import { pusher } from "../helper/pusher.ts";
-import amqp from "amqplib";
-import { Buffer } from "node:buffer";
-const AMQP_URL = "amqp://guest:guest@127.0.0.1:5672";
 
-async function connectAndSendMessage() {
-  try {
-    const connection = await amqp.connect(AMQP_URL);
-    console.log("Connected to RabbitMQ");
-
-    const channel = await connection.createChannel();
-    console.log("Channel created");
-
-    const queue = "hello";
-    const msg = "Hello World!";
-
-    await channel.assertQueue(queue, {
-      durable: false,
-    });
-
-    for (let i = 0; i < 10000; i++) {
-      await channel.sendToQueue(queue, Buffer.from(`${msg} ${i + 1}`));
-      console.log(` [x] Sent ${msg} (${i + 1}/10000)`);
-    }
-
-    console.log('Finished sending messages');
-    await channel.close();
-    await connection.close();
-  } catch (error) {
-    console.error("Error connecting to RabbitMQ", error);
-    process.exit(1);
-  }
-}
-
-async function consumeMessages() {
-  try {
-    const connection = await amqp.connect(AMQP_URL);
-    console.log('Connected to RabbitMQ');
-    const channel = await connection.createChannel();
-    console.log('Channel created');
-    const queue = 'hello';
-    await channel.assertQueue(queue, {
-      durable: false,
-    });
-    channel.consume(queue, (msg) => {
-      if (msg.content) {
-        console.log('Received message:', msg.content.toString());
-      }
-    }, {
-      noAck: true,
-    });
-  } catch (error) {
-    console.error('Error connecting to RabbitMQ', error);
-    process.exit(1);
-  }
-}
+import { ReceivedQueue, SendQueue } from "../helper/Queue.ts";
 
 export const getItems = async (ctx: Context) => {
   const data = await fetchAll("items");
-  // await connectAndSendMessage(); 
-  await consumeMessages(); 
+  const queue = "hello";
+  const message = "This Is Test Message";
+  // await SendQueue(queue, message);
+  var QueueChannel = await ReceivedQueue(queue);
+  QueueChannel.consume(queue, (msg) => {
+    if (msg.content) {
+      console.log("Received message:", msg.content.toString());
+    }
+  }, {
+    noAck: true,
+  });
 
   ctx.response.body = data;
   ctx.response.status = 200;
