@@ -2,7 +2,7 @@ import {Application,Router,Context,Status,} from "https://deno.land/x/oak/mod.ts
 import { authorized } from "./..//middlewares/isAuthorized.ts";
 
 
-import { getTrips,getTripsById,TripsStore,TripsUpdate,TripsDelete }from '../controllers/Trips/TripsController.ts'
+import { getTrips,getTripsById,TripsStore,TripsDelete }from '../controllers/Trips/TripsController.ts'
 // const router = new Router({ prefix: '/api', namespace: '/v1' });
 const trips = new Router();
 trips.use(authorized);

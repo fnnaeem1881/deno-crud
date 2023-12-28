@@ -19,6 +19,9 @@ const app = new Application();
 import router from "./src/routes/defualt.ts";
 import AuthRoute from "./src/routes/auth.ts";
 import trips from "./src/routes/trips.ts";
+import bid from "./src/routes/bid.ts";
+import UserRoute from "./src/routes/user.ts";
+
 
 app.use(async (ctx, next) => {
   io.emit("hello", "world");
@@ -26,6 +29,7 @@ app.use(async (ctx, next) => {
   ctx.response.headers.set('Access-Control-Allow-Origin', '*');
   ctx.response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   ctx.response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+
   await next();
   const rt = ctx.response.headers.get("X-Response-Time");
   console.log(`${ctx.request.method} ${ctx.request.url} - ${rt}`);
@@ -40,7 +44,9 @@ app.use(oakCors({ origin: "*" }));
 app.use(router.routes());
 app.use(AuthRoute.routes());
 app.use(trips.routes());
+app.use(UserRoute.routes());
 app.use(router.allowedMethods());
+
 
 const PORT1 = 8000;
 const PORT2 = 3000;

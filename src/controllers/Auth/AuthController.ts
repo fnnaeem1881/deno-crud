@@ -5,24 +5,11 @@ import {
   Status,
 } from "https://deno.land/x/oak/mod.ts";
 import database from "./../../config/database.ts";
-import { User } from "./../../models/Auth.ts";
+import { User } from "../../models/User.ts";
 import { create } from "https://deno.land/x/djwt@v2.4/mod.ts";
-import {
-  deleteByID,
-  fetchAll,
-  findByEmail,
-  findByID,
-  findByMobile,
-  StoreData,
-  updateData,
-} from "./../../helper/db_query.ts";
+import { deleteByID, fetchAll, findByEmail, findByID, findByMobile, StoreData, updateData,} from "./../../helper/db_query.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt/mod.ts";
-import {
-  ACCESS_TOKEN_EXPIRES_IN,
-  REFRESH_TOKEN_EXPIRES_IN,
-  signJwt,
-  verifyJwt,
-} from "./../../helper/jwt.ts";
+import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN, signJwt, verifyJwt,} from "./../../helper/jwt.ts";
 
 export const Login = async (ctx) => {
   try {
@@ -76,6 +63,8 @@ export const Login = async (ctx) => {
         mobile: user.mobile,
         access_token: access_token,
         refresh_token: refresh_token,
+        accessTokenExpiresIn: accessTokenExpiresIn,
+        refreshTokenExpiresIn: refreshTokenExpiresIn,
       };
     } else {
       ctx.response.status = 500;
@@ -124,10 +113,7 @@ export const Registration = async (ctx: Context) => {
   }
 };
 
-export const refreshAccessTokenController = async (ctx: Context,{
-  response,
-  cookies,
-}: RouterContext<string>) => {
+export const refreshAccessTokenController = async (ctx: Context,{ response,}: RouterContext<string>) => {
   try {
     const headers: Headers = ctx.request.headers;
     const authorization = headers.get("Authorization");
@@ -211,6 +197,8 @@ export const refreshAccessTokenController = async (ctx: Context,{
         mobile: user.mobile,
         access_token: access_token,
         refresh_token: refresh_token_new,
+        accessTokenExpiresIn: accessTokenExpiresIn,
+        refreshTokenExpiresIn: refreshTokenExpiresIn,
       };
     } else {
       ctx.response.status = 500;

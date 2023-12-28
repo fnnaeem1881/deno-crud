@@ -11,6 +11,5 @@ const authRoutes = new Router();
 authRoutes.post('/login', Login)
 authRoutes.post('/refresh-token', refreshAccessTokenController)
 authRoutes.post('/registration', Registration)
-   
 
 export default authRoutes

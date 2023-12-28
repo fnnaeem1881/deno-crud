@@ -1,0 +1,7 @@
+export interface Bid {
+    id?: string;
+    amount: string;
+    driver_id?: string;
+    trip_id: string;
+    status?: number;
+  }
