@@ -7,7 +7,7 @@ import { getTrips,getTripsById,TripsStore,TripsDelete }from '../controllers/Trip
 const trips = new Router();
 trips.use(authorized);
 trips.get('/trips', getTrips)
-// router.get('/Trips/:id', getTripsById)
+trips.get('/Trips/:id', getTripsById)
 trips.post('/Trips', TripsStore)
 // router.post('/Trips/:id', TripsUpdate)
 // router.delete('/Trips/:id', TripsDelete)

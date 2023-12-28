@@ -17,15 +17,21 @@ export default {
     };
   },
   mounted() {
-    this.GetUser();
+    this.CheckToken();
   },
   methods:{
-    GetUser() {
+    CheckToken(){
       if (this.isAccessTokenExpired()) {
-            this.refreshAccessToken();
+              this.refreshAccessToken();
         } else if(this.isRefreshTokenExpired()){
-            this.loggedIn=false;
-        }else{
+              this.loggedIn=false;
+          }else{
+            this.GetUser();
+
+          }
+    },
+    GetUser() {
+
           const access_token = sessionStorage.getItem('access_token');
           axios.get(`${this.base_url}/user`, 
             {
@@ -36,6 +42,7 @@ export default {
             )
             .then((response) => {
                 console.log(response);
+
                 this.loggedIn=true;
                 this.user=response.data.user;
                 console.log("Access token refreshed successfully");
@@ -43,8 +50,6 @@ export default {
             .catch((error) => {
                 console.error("Error refreshing access token", error);
             });
-        }
-        
       },
       isAccessTokenExpired() {
           const expiration = sessionStorage.getItem('access_token_expiration');
@@ -73,8 +78,8 @@ export default {
               sessionStorage.setItem('refresh_token', refresh_token);
               sessionStorage.setItem('access_token_expiration', accessTokenExpiration.toString());
               sessionStorage.setItem('refresh_token_expiration', refreshTokenExpiration.toString());
-
-              console.log("Access token refreshed successfully");
+              this.GetUser();
+              console.log("Refresh token refreshed successfully");
           })
           .catch((error) => {
               console.error("Error refreshing access token", error);
@@ -91,7 +96,7 @@ export default {
 </script>
 
 <template>
-  <Header :base_url="base_url" :loggedIn="loggedIn" :user="user" @login-success="GetUser" @logout="handleLogout"></Header>
+  <Header :base_url="base_url" :loggedIn="loggedIn" :user="user" @login-success="CheckToken" @logout="handleLogout"></Header>
   <router-view :base_url="base_url" :loggedIn="loggedIn" :user="user"></router-view>
   <Footer :base_url="base_url" :loggedIn="loggedIn" :user="user"></Footer>
 </template>

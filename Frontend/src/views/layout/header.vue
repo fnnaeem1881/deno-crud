@@ -18,14 +18,8 @@
 
                             <ul class="dropdown-menu  dropdown-menu-end fade">
                                 <li>
-                                    <!-- {% if user.user_type ==1 %} -->
-                                    <a class="dropdown-item" href="/customer">Dashboard</a>
-                                    <a class="dropdown-item" href="/trip/accept">My Trip</a>
-
-                                    <!-- {% elif user.user_type ==2 %}
-                                    <a class="dropdown-item" href="/driver">Dashboard</a>
-
-                                    {% endif %} -->
+                                    <router-link class="dropdown-item" :to="{ name: 'driver' }">Dashboard</router-link>
+                                    <router-link class="dropdown-item" :to="{ name: 'driver-trip-list' }">My Trip</router-link>
                                 </li>
                                 <li>
                                     

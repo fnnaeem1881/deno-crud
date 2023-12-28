@@ -207,8 +207,9 @@ export const refreshAccessTokenController = async (ctx: Context,{ response,}: Ro
       };
     }
   } catch (error) {
-    response.status = 500;
-    response.body = { status: "error", message: error.message };
-    return;
+    ctx.response.status = 500;
+    ctx.response.body = {
+      message: "Token has expaired",
+    };
   }
 };
