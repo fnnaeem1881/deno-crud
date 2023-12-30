@@ -122,6 +122,7 @@
                 var channel = pusher.subscribe(`bid-channel-${this.trip_id}`);
                 channel.bind(`bid-event-${this.trip_id}`, (data) => {
                     console.log('Puhsher Work',data);
+                    this.BidGet();
                 });
             }, 100);
             
@@ -151,6 +152,8 @@
                   })
                   .catch((error) => {
                       console.error("Error refreshing access token", error);
+                      this.BidStoreButton=false
+
                   }); 
             },
             BidGet() {
@@ -197,6 +200,7 @@
                         this.BidStoreButton=false
                     })
                     .catch((error) => {
+                        this.BidStoreButton=false
                         console.log(error.response.data);
                         alert(error.response.data.message);
                         console.error(error);
