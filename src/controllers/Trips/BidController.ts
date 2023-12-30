@@ -55,6 +55,7 @@ export const BidStore = async (ctx) => {
       amount: requestBody.amount,
       trip_id: requestBody.trip_id,
       driver_id: user.id,
+      created_at: new Date().toISOString(),
     };
 
     const store = await StoreData("bids", newItem);

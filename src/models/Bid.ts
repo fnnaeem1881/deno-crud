@@ -4,4 +4,5 @@ export interface Bid {
     driver_id?: string;
     trip_id: string;
     status?: number;
+    created_at?: string;
   }
