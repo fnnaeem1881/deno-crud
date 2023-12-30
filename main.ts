@@ -53,10 +53,10 @@ const PORT1 = 8000;
 const PORT2 = 3000;
 
 const socketServer = serve(io.handler(), { port: PORT2 });
-console.log(`Socket Server running on http://localhost:${PORT2}`);
+console.log(`Socket Server running on 0.0.0.0:${PORT2}`);
 
 await app.listen({ port: PORT1 });
-console.log(`HTTP Server running on http://localhost:${PORT1}`);
+console.log(`HTTP Server running on 0.0.0.0:${PORT1}`);
 
 for await (const request of socketServer) {
 }

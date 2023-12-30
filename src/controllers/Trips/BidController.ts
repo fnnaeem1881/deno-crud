@@ -12,24 +12,33 @@ import { pusher } from "../../helper/pusher.ts";
 import { redis } from "../../helper/redis.ts";
 
 import { ReceivedQueue, SendQueue } from "../../helper/Queue.ts";
-
 export const getBidById = async (ctx: Context) => {
   const { id } = ctx.params;
   let item: any;
   console.log(id);
-  
-  const keyType = await redis.type(id);
+
   // const item = await findAnyIdWithColumnName("bids","trip_id", id);
+  const keyType = await redis.type(id);
 
   if (keyType === "list") {
+     // const index = 2;
+    // const storedData = await redis.lindex(id, index);
+
+    // if (storedData) {
+    //   const item = JSON.parse(storedData);
+    //   console.log(`Item at index ${index}:`, item);
+    // } else {
+    //   console.log(`No data found at index ${index} for id: ${id}`);
+    // }
     const storedData = await redis.lrange(id, 0, -1);
-    item = storedData.map((item) => JSON.parse(item));
-    console.log("parsedData", item);
+    item = storedData.map((itemData, index) => ({
+      ...JSON.parse(itemData),
+      index,
+    }));
   } else if (keyType === "string") {
     const storedData = await redis.get(id);
     if (storedData) {
-      item = JSON.parse(storedData);
-      console.log("parsedData", item);
+      item = { ...JSON.parse(storedData), index: 0 };
     } else {
       console.log(`No data found for id: ${id}`);
     }
@@ -38,7 +47,7 @@ export const getBidById = async (ctx: Context) => {
       `Key ${id} is of type ${keyType}, expected type 'list' or 'string'.`,
     );
   }
-
+  
   if (item) {
     ctx.response.body = item;
   } else {
@@ -46,6 +55,8 @@ export const getBidById = async (ctx: Context) => {
     ctx.response.body = { message: "Bid not found" };
   }
 };
+
+
 export const BidStore = async (ctx) => {
   try {
     const user = ctx.state.user;
