@@ -55,8 +55,8 @@
                             </div>
                             <div class="card-body chat-care">
                                 <ul class="chat">
-                                    <li v-for="(item, index) in bids" :key="index" class="agent clearfix user-6">
-                                        <span class="chat-img left clearfix mx-2"><img src="/assets/image/customer_image/avatar-02.jpg" alt="Agent" class="img-circle" /></span>
+                                <li v-for="(item, index) in bids" :key="index" :class="{ 'admin': user.id === item.driver_id, 'agent': user.id !== item.driver_id }" class="clearfix user-6">
+                                        <span :class="{ 'right': user.id === item.driver_id, 'left': user.id !== item.driver_id }" class="chat-img clearfix mx-2"><img src="/assets/image/customer_image/avatar-02.jpg" alt="Agent" class="img-circle" /></span>
                                         <div class="chat-body clearfix">
                                             <div class="header clearfix">
                                                 <strong class="primary-font">driver</strong><small class="right text-muted"><span class="glyphicon glyphicon-time"></span>{{DateTimeFormat(item.created_at)  }} ago</small>
@@ -122,7 +122,6 @@
                 var channel = pusher.subscribe(`bid-channel-${this.trip_id}`);
                 channel.bind(`bid-event-${this.trip_id}`, (data) => {
                     console.log('Puhsher Work',data);
-                    this.BidGet();
                 });
             }, 100);
             

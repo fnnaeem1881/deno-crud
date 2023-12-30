@@ -19,7 +19,7 @@
                             <ul class="dropdown-menu  dropdown-menu-end fade">
                                 <li>
                                     <router-link class="dropdown-item" :to="{ name: 'driver' }">Dashboard</router-link>
-                                    <router-link class="dropdown-item" :to="{ name: 'driver-trip-list' }">My Trip</router-link>
+                                    <router-link class="dropdown-item" :to="{ name: 'driver-trip-list' }">Trips</router-link>
                                 </li>
                                 <li>
                                     
