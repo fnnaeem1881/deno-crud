@@ -30,17 +30,15 @@ import { ReceivedQueue, SendQueue } from "../../helper/Queue.ts";
         driver_id: user.id,
       };
       const store = await StoreData("bids", newItem);
-      const InsertBids = await findByID("trips", store.lastInsertId);
+      const InsertBids = await findByID("bids", store.lastInsertId);
 
-      const channel = `trips-channel-${store.lastInsertId}-${user.id}`;
+      const channel = `bid-channel-${requestBody.trip_id}`;
       
-      const event = `trips-event-${store.lastInsertId}-${user.id}`;
+      const event = `bid-event-${requestBody.trip_id}`;
       console.log(channel);
       console.log(event);
-
-
       pusher.trigger(channel, event, InsertBids)
-        .then(() => console.log("Event triggered successfully"))
+        .then(() => console.log("Bid Event triggered successfully"))
         .catch((error) => console.error("Error triggering event:", error));
 
       console.log(`Inserted ${InsertBids}`);

@@ -7,8 +7,8 @@ import type { Header, Payload } from "https://deno.land/x/djwt@v2.4/mod.ts";
 import { config as dotenvConfig } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
 import { convertToCryptoKey } from "./convertCryptoKey.ts";
 
-export const ACCESS_TOKEN_EXPIRES_IN = 50;
-export const REFRESH_TOKEN_EXPIRES_IN = 60;
+export const ACCESS_TOKEN_EXPIRES_IN = 120;
+export const REFRESH_TOKEN_EXPIRES_IN = 180;
 
 
 dotenvConfig({ export: true, path: ".env", safe: true });

@@ -39,7 +39,7 @@
                                     <th >{{ item.car_name }}</th>
                                     <th >{{ item.pick_up_location }}</th>
                                     <th >{{ item.destination }}</th>
-                                    <td><p class="text-success m-0"><b>Pick Time: </b> 12:00 PM</p> </td>
+                                    <td><p class="text-success m-0"><b> </b> {{ DateTimeFormat(item.created_at) }}</p> </td>
                                     <td>
                                         <button type="button" @click="TripDetails(item.id)" class="btn btn-info text-white">Bid Now</button>
                                     </td>
@@ -56,6 +56,8 @@
 
 <script lang="ts">
 import axios from "axios";
+import Pusher from 'pusher-js';
+import moment from 'moment';
 
 export default {
     name: "Driver-Trip-List",
@@ -71,6 +73,15 @@ export default {
             }
         }, 100);
         this.GetTrips();
+        Pusher.logToConsole = true;
+            var pusher = new Pusher('1ee622cf7ae9168aca28', {
+            cluster: 'ap2'
+        });
+        var channel = pusher.subscribe('trips-channel');
+        channel.bind('trips-event', (data) => {
+            console.log('Puhsher Work',data);
+            this.GetTrips();
+        });
     },
     props: {
         loggedIn: Boolean,
@@ -97,7 +108,13 @@ export default {
         },
         TripDetails(trip_id){
             this.$router.push({ name: 'TripDetails', params: { trip_id: trip_id } });
+        },
+        DateTimeFormat(data){
+            if (data) {
+                return moment(String(data)).format('LLL');
+            }
         }
+        
     }
 }
 </script>

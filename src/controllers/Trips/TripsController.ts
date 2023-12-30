@@ -44,15 +44,13 @@ export const getTrips = async (ctx: Context) => {
       const store = await StoreData("trips", newItem);
       const Inserttrips = await findByID("trips", store.lastInsertId);
 
-      const channel = `trips-channel-${store.lastInsertId}-${user.id}`;
+      const channel = 'trips-channel';
       
-      const event = `trips-event-${store.lastInsertId}-${user.id}`;
+      const event = 'trips-event';
       console.log(channel);
       console.log(event);
-
-
       pusher.trigger(channel, event, Inserttrips)
-        .then(() => console.log("Event triggered successfully"))
+        .then(() => console.log("Trip Event triggered successfully"))
         .catch((error) => console.error("Error triggering event:", error));
 
       console.log(`Inserted ${Inserttrips}`);

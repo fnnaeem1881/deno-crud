@@ -91,6 +91,7 @@
     <script lang="ts">
     import axios from "axios";
     import moment from 'moment';
+    import Pusher from 'pusher-js';
 
     export default {
         name: "Trip-Details",
@@ -111,11 +112,26 @@
                     this.$router.push("/");
                 }
             }, 100);
+           
             this.TripDetails();
+            Pusher.logToConsole = true;
+            var pusher = new Pusher('1ee622cf7ae9168aca28', {
+            cluster: 'ap2'
+            });
+            setTimeout(() => {
+                var channel = pusher.subscribe(`bid-channel-${this.trip_id}`);
+                channel.bind(`bid-event-${this.trip_id}`, (data) => {
+                    console.log('Puhsher Work',data);
+                    this.BidGet();
+                });
+            }, 100);
+            
+            
         },
         props: {
             loggedIn: Boolean,
             base_url: String,
+            user: Object ,
         },
         methods:{
             TripDetails() {
