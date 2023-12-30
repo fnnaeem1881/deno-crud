@@ -54,18 +54,27 @@
                                 <span>Trip Bid</span>
                             </div>
                             <div class="card-body chat-care">
-                                <ul class="TripBidings">
-
+                                <ul class="chat">
+                                    <li v-for="(item, index) in bids" :key="index" class="agent clearfix user-6">
+                                        <span class="chat-img left clearfix mx-2"><img src="/assets/image/customer_image/avatar-02.jpg" alt="Agent" class="img-circle" /></span>
+                                        <div class="chat-body clearfix">
+                                            <div class="header clearfix">
+                                                <strong class="primary-font">driver</strong><small class="right text-muted"><span class="glyphicon glyphicon-time"></span>{{DateTimeFormat(item.created_at)  }} ago</small>
+                                            </div>
+                                            <p>Amount: {{ item.amount }}</p>
+                                        </div>
+                                    </li>
                                 </ul>
+
                             </div>
                             <div class="card-footer">
 
                                 <div v-if="trips.driver_id == null" class="input-group">
-                                    <input id="btn-input" name="amount" type="number" class="form-control input-sm"
+                                    <input id="btn-input" v-model="form.amount" type="number" class="form-control input-sm"
                                         placeholder="Type your message here..." />
                                     <span class="input-group-btn">
-                                        <button class="btn btn-primary" id="btn-chat">
-                                            Send
+                                        <button @click="BidStore()" :disabled="BidStoreButton" class="btn btn-primary" id="btn-chat">
+                                            Submit
                                         </button>
                                     </span>
                                 </div>
@@ -81,12 +90,19 @@
     
     <script lang="ts">
     import axios from "axios";
-    
+    import moment from 'moment';
+
     export default {
         name: "Trip-Details",
         data() {
             return {
                 trips:[],
+                bids:[],
+                trip_id:null,
+                BidStoreButton:true,
+                form:{
+                    amount:'',
+                }
             };
         },
         mounted(){
@@ -114,11 +130,68 @@
                   .then((response) => {
                     this.trips=response.data[0];
                       console.log('trips',response);
+                      this.trip_id=response.data[0].id;
+                      this.BidGet();
+                      this.BidStoreButton=false
+                  })
+                  .catch((error) => {
+                      console.error("Error refreshing access token", error);
+                  }); 
+            },
+            BidGet() {
+                const access_token = sessionStorage.getItem('access_token');
+                axios.get(`${this.base_url}/bid/${this.trip_id}`, 
+                  {
+                      headers: {
+                          Authorization: `Bearer ${access_token}`,
+                      },
+                  }
+                  )
+                  .then((response) => {
+                    this.bids=response.data;
+                      console.log('bids',response);
                     
                   })
                   .catch((error) => {
                       console.error("Error refreshing access token", error);
                   }); 
+            },
+            BidStore() {
+                this.BidStoreButton=true;
+                const access_token = sessionStorage.getItem('access_token');
+                if (this.form.amount === '') {
+                    alert('Amount is Required');
+                }else if (this.trip_id === null) {
+                    alert('Somthing went wrong');
+                }else {
+                    axios.post(`${this.base_url}/bid`,
+                        {
+                            amount: this.form.amount,
+                            trip_id: this.trip_id,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${access_token}`,
+                            },
+                        }
+                    )
+                    .then((response) => {
+                        console.log(response);
+                        this.BidGet();
+                        this.form.amount='';
+                        this.BidStoreButton=false
+                    })
+                    .catch((error) => {
+                        console.log(error.response.data);
+                        alert(error.response.data.message);
+                        console.error(error);
+                    });
+                }
+            },
+            DateTimeFormat(data){
+                if (data) {
+                    return moment(String(data)).fromNow(true);
+                }
             }
         }
     }

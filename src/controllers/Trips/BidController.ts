@@ -1,7 +1,7 @@
 import { Application, Context, Status } from "https://deno.land/x/oak/mod.ts";
 import database from "./../../config/database.ts";
 import { Bid } from "./../../models/Bid.ts";
-import { deleteByID, fetchAll, findByID, StoreData, updateData,} from "./../../helper/db_query.ts";
+import { deleteByID, fetchAll, findByID, StoreData, findAnyIdWithColumnName,} from "./../../helper/db_query.ts";
 import { pusher } from "../../helper/pusher.ts";
 import { redis } from "../../helper/redis.ts";
 
@@ -10,7 +10,7 @@ import { ReceivedQueue, SendQueue } from "../../helper/Queue.ts";
 
   export const getBidById = async (ctx: Context) => {
     const { id } = ctx.params;
-    const item = await findByID("bids", id);
+    const item = await findAnyIdWithColumnName("bids","trip_id", id);
     if (item) {
       ctx.response.body = item;
     } else {
@@ -44,7 +44,7 @@ import { ReceivedQueue, SendQueue } from "../../helper/Queue.ts";
         .catch((error) => console.error("Error triggering event:", error));
 
       console.log(`Inserted ${InsertBids}`);
-      ctx.response.body = { message: "Created Trips!", Trips: newItem };
+      ctx.response.body = { message: "Bid submit successfully !", Trips: newItem };
     } catch (error) {
       console.log(error);
       ctx.response.status = 500;

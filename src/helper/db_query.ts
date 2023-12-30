@@ -70,3 +70,11 @@ export const fetchAll = async (table: string): Promise<any[]> => {
     return result;
   };
   
+  export const findAnyIdWithColumnName = async (table: string, column: any, id: any): Promise<any> => {
+    const result = await database.query("SELECT * FROM ?? WHERE ?? = ?", [
+      table,
+      column,
+      id,
+    ]);
+    return result;
+  };

@@ -45,6 +45,7 @@ app.use(router.routes());
 app.use(AuthRoute.routes());
 app.use(trips.routes());
 app.use(UserRoute.routes());
+app.use(bid.routes());
 app.use(router.allowedMethods());
 
 
