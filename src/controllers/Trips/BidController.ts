@@ -79,15 +79,9 @@ export const BidStore = async (ctx) => {
     if (keyType === "list") {
       const rpushResult = await redis.rpush(TripId, jsonString);
       console.log("rpush result:", rpushResult);
-      const storedData = await redis.lrange(TripId, 0, -1);
-      const parsedData = storedData.map((item) => JSON.parse(item));
-      console.log("parsedData", parsedData);
     } else if (keyType === "string") {
       const lpushResult = await redis.lpush(TripId, jsonString);
       console.log("lpush result:", lpushResult);
-      const storedData = await redis.lrange(TripId, 0, -1);
-      const parsedData = storedData.map((item) => JSON.parse(item));
-      console.log("parsedData", parsedData);
     } else if (keyType === "none") {
       const rpushResult = await redis.rpush(TripId, jsonString);
       console.log("rpush result:", rpushResult);
